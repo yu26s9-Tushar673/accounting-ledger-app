@@ -20,6 +20,12 @@ public class Transaction
         this.price = price;
     }
 
+    public void displayTransaction()
+    {
+        System.out.printf("\nDate: %s | Time: %s | %s | %s | Amount: $%.2f",
+                this.getDate(), this.getTime(), this.getDescription(), this.getVendor(), this.getPrice());
+    }
+
     public LocalDate getDate()
     {   return date;    }
 

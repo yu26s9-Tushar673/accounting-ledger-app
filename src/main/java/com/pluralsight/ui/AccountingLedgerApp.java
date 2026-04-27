@@ -22,15 +22,16 @@ public class AccountingLedgerApp
 
         do {
             System.out.print("""
-                    --- Home Screen ---
+                    \n
+                    ------ Home Screen ------
                     D) Add Deposit
                     P) Make Payment (Debit)
                     L) Ledger - Ledger Display screen
                     X) Exit - exit the application
-                    -------------------
+                    -------------------------
                     """
             );
-            String command = promptForString("Enter command letter: ").toLowerCase();
+            String command = promptForString("Enter one of the given command letters: ").toLowerCase();
 
             switch (command)
             {
@@ -41,7 +42,7 @@ public class AccountingLedgerApp
                     makePayment();
                     break;
                 case "l":
-                    displayLedgerOptions();
+                    displayLedgerOptions(ledgerLog);
                     break;
                 case "x":
                     System.out.println("Thank you, Goodbye!");
@@ -60,9 +61,55 @@ public class AccountingLedgerApp
 
     }
 
-    private static void displayLedgerOptions()
+    private static void displayLedgerOptions(ArrayList<Transaction> ledger)
     {
+        System.out.print("""
+                    \n----- Ledger Screen -----
+                    A) All - Display All Entries
+                    D) Deposits - Display All Deposits Only
+                    P) Payments - Display All Payments Only
+                    R) Reports - Custom Display Options
+                    H) Home - Go back to home page
+                    -------------------------
+                    """
+        );
+        String command = promptForString("Enter one of the given command letters: ").toLowerCase();
 
+        switch (command)
+        {
+            case "a":
+                for (int i = 0; i < ledger.size(); i++) {
+                    Transaction t = ledger.get(i);
+                    t.displayTransaction();
+                }
+                break;
+            case "d":
+                for (int i = 0; i < ledger.size(); i++) {
+                    Transaction t = ledger.get(i);
+                    if (t.getPrice() > 0)
+                    {   t.displayTransaction();    }
+                }
+                break;
+            case "p":
+                for (int i = 0; i < ledger.size(); i++) {
+                    Transaction t = ledger.get(i);
+                    if (t.getPrice() < 0)
+                    {   t.displayTransaction();    }
+                }
+                break;
+            case "r":
+                reportsScreen();
+                break;
+            case "h":
+                System.out.println("Returning to Home Screen....");
+                break;
+        }
+
+
+    }
+
+    private static void reportsScreen()
+    {
 
     }
 
