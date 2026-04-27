@@ -1,9 +1,21 @@
 ﻿date|time|description|vendor|amount
-2023-04-15|11:15:00|Invoice 1001 paid|Joe|1500.00
-2026-04-20|08:15:30|Morning coffee|Starbucks|-5.75
-2026-04-20|09:45:00|Salary deposit|Employer Inc|2500.00
-2026-04-21|04:20:10|Freelance payment|John Smith|750.00
-2026-04-22|07:50:00|Gas refill|Shell|-48.25
-2026-04-25|07:30:00|Concert tickets|Ticketmaster|-150.00
-2026-04-26|10:55:15|Book purchase|Amazon|-24.50
-2023-04-15|10:13:25|ergonomic keyboard|Amazon|-89.50
+2025-01-15|09:30:00|Paycheck deposit|Employer Inc|2400.00
+2025-02-10|14:15:25|Electric bill payment|PSEG|-120.45
+2025-03-05|08:45:10|Groceries|ShopRite|-76.22
+2026-04-24|16:15:35|Freelance website payment|Client C|900.00
+2026-04-18|09:05:50|Gym membership|Planet Fitness|-25.00
+2026-04-10|13:45:15|Lunch meeting|Panera Bread|-23.75
+2026-04-02|10:20:00|Invoice paid|ABC Solutions|1100.00
+2026-03-28|19:30:00|Concert tickets|Ticketmaster|-180.00
+2026-03-09|07:50:15|Gas refill|Shell|-52.30
+2026-02-16|15:25:45|Side hustle payment|Client B|650.00
+2026-01-12|08:00:00|Rent payment|Landlord|-1500.00
+2025-12-21|20:10:10|Holiday shopping|Amazon|-250.75
+2025-11-08|09:15:35|Medical reimbursement|Insurance Co|300.00
+2025-10-14|17:45:50|Streaming subscription|Netflix|-19.99
+2025-09-27|13:30:20|Bonus payment|Employer Inc|1200.00
+2025-08-19|11:55:00|Laptop repair|Best Buy|-145.99
+2025-07-03|16:40:15|Car insurance payment|GEICO|-210.00
+2025-06-11|10:05:30|Freelance project payment|Client A|800.00
+2025-05-22|18:20:40|Dinner with friends|Olive Garden|-64.80
+2025-04-18|12:10:00|Tax refund|IRS|950.00

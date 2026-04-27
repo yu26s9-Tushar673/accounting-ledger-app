@@ -98,7 +98,7 @@ public class AccountingLedgerApp
                 }
                 break;
             case "r":
-                reportsScreen();
+                reportsScreen(ledger);
                 break;
             case "h":
                 System.out.println("Returning to Home Screen....");
@@ -108,9 +108,106 @@ public class AccountingLedgerApp
 
     }
 
-    private static void reportsScreen()
+    private static void reportsScreen(ArrayList<Transaction> ledger)
     {
+        System.out.print("""
+                    \n----- Report Options Screen -----
+                    1) Month-To-Date Report
+                    2) Previous Month Report
+                    3) Year-To-Date Report
+                    4) Previous Year Report
+                    5) Search By Vendor
+                    0) Back - Go back to ledger screen
+                    ---------------------------------
+                    """
+        );
+        int command = promptForInt("Enter command #: ");
 
+        switch (command)
+        {
+            case 1:
+                monthToDate(ledger);
+                break;
+            case 2:
+                previousMonth(ledger);
+                break;
+            case 3:
+                yearToDate(ledger);
+                break;
+            case 4:
+                previousYear(ledger);
+                break;
+            case 5:
+                searchByVendor(ledger);
+                break;
+            case 0:
+                System.out.println("Returning to Ledger Screen");
+                break;
+        }
+    }
+
+    private static void searchByVendor(ArrayList<Transaction> ledger)
+    {
+        String vendor = promptForString("Enter Vendor : ");
+
+        for (int i = 0; i < ledger.size(); i++) {
+            Transaction t = ledger.get(i);
+            if (t.getVendor().toLowerCase().contains(vendor.toLowerCase()))
+            {   t.displayTransaction(); }
+        }
+    }
+
+    private static void previousYear(ArrayList<Transaction> ledger)
+    {
+        LocalDate today = LocalDate.now();
+        int prevYear = today.getYear() - 1;
+
+        for (int i = 0; i < ledger.size(); i++) {
+            Transaction t = ledger.get(i);
+            if (t.getDate().getYear() == prevYear)
+            {   t.displayTransaction(); }
+        }
+    }
+
+    private static void yearToDate(ArrayList<Transaction> ledger)
+    {
+        LocalDate today = LocalDate.now();
+        LocalDate ytdStart = today.withDayOfYear(1);
+        System.out.println("\n----- Year-To-Date -----");
+
+        for (int i = 0; i < ledger.size(); i++) {
+            Transaction t = ledger.get(i);
+            if (!t.getDate().isBefore(ytdStart) && !t.getDate().isAfter(today))
+            {   t.displayTransaction(); }
+        }
+    }
+
+    private static void previousMonth(ArrayList<Transaction> ledger)
+    {
+        LocalDate firstOfMonth = LocalDate.now().withDayOfMonth(1);
+        LocalDate prevMonthStart = firstOfMonth.minusMonths(1);
+        LocalDate prevMonthEnd = firstOfMonth.minusDays(1);
+        System.out.println("\n---- Previous Month ----");
+
+        for (int i = 0; i < ledger.size(); i++) {
+            Transaction t = ledger.get(i);
+            if(!t.getDate().isBefore(prevMonthStart) && !t.getDate().isAfter(prevMonthEnd))
+            {   t.displayTransaction(); }
+        }
+
+    }
+
+    private static void monthToDate(ArrayList<Transaction> ledger)
+    {
+        LocalDate today = LocalDate.now();
+        LocalDate start = today.withDayOfMonth(1);
+        System.out.println("\n----- Month-To-Date -----");
+
+        for (int i = 0; i < ledger.size(); i++) {
+            Transaction t = ledger.get(i);
+            if(!t.getDate().isBefore(start) && !t.getDate().isAfter(today))
+            {   t.displayTransaction(); }
+        }
     }
 
     private static ArrayList<Transaction> getLedgerLog() throws IOException
