@@ -2,17 +2,14 @@ package com.pluralsight.ui;
 
 import com.pluralsight.models.Transaction;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import static com.pluralsight.ui.Console.promptForInt;
-import static com.pluralsight.ui.Console.promptForString;
+import static com.pluralsight.ui.Console.*;
 
 public class AccountingLedgerApp
 {
@@ -36,10 +33,10 @@ public class AccountingLedgerApp
             switch (command)
             {
                 case "d":
-                    addDeposit();
+                    ledgerLog = addDeposit(ledgerLog);
                     break;
                 case "p":
-                    makePayment();
+                    ledgerLog = makePayment(ledgerLog);
                     break;
                 case "l":
                     displayLedgerOptions(ledgerLog);
@@ -51,14 +48,53 @@ public class AccountingLedgerApp
         } while (true);
     }
 
-    private static void addDeposit()
-    {
+    // Add a deposit Transaction to the ledger log
+    private static ArrayList<Transaction> addDeposit(ArrayList<Transaction> ledger) throws IOException {
+        String description = promptForString("Enter deposit Description: ");
+        String vendor = promptForString("Enter deposit Vendor: ");
+        float amount = promptForFloat("Enter deposit Amount: ");
+        if (amount <= 0)
+        {
+            while (amount <= 0)
+            {   amount = promptForFloat("Deposit must be positive! Enter a positive value: ");  }
+        }
+
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now().withNano(0);
+
+        BufferedWriter bufWriter = new BufferedWriter(new FileWriter("transactions.csv", true));
+        bufWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
+        bufWriter.close();
+
+        ledger.add(new Transaction(date, time, description, vendor, amount));
+        Collections.sort(ledger, Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
+
+        return ledger;
 
     }
 
-    private static void makePayment()
-    {
+    // Add a payment Transaction to the ledger log
+    private static ArrayList<Transaction> makePayment(ArrayList<Transaction> ledger) throws IOException {
+        String description = promptForString("Enter payment Description: ");
+        String vendor = promptForString("Enter payment Vendor: ");
+        float amount = promptForFloat("Enter payment Amount: ");
+        if (amount >= 0)
+        {
+            while (amount >= 0)
+            {   amount = promptForFloat("Payment must be negative! Enter a negative value: ");  }
+        }
 
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now().withNano(0);
+
+        BufferedWriter bufWriter = new BufferedWriter(new FileWriter("transactions.csv", true));
+        bufWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
+        bufWriter.close();
+
+        ledger.add(new Transaction(date, time, description, vendor, amount));
+        Collections.sort(ledger, Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
+
+        return ledger;
     }
 
     // Displays ledger screen options.
