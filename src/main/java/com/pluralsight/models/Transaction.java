@@ -1,17 +1,18 @@
 package com.pluralsight.models;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class Transactions
+public class Transaction
 {
-    private DateTimeFormatter date;
-    private DateTimeFormatter time;
+    private LocalDate date;
+    private LocalTime time;
     private String description;
     private String vendor;
     private float price;
 
-    public Transactions(DateTimeFormatter date, DateTimeFormatter time, String description, String vendor, float price) {
+    public Transaction(LocalDate date, LocalTime time, String description, String vendor, float price) {
         this.date = date;
         this.time = time;
         this.description = description;
@@ -19,18 +20,18 @@ public class Transactions
         this.price = price;
     }
 
-    public DateTimeFormatter getDate()
+    public LocalDate getDate()
     {   return date;    }
 
-    public void setDate(DateTimeFormatter date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public DateTimeFormatter getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(DateTimeFormatter time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 
