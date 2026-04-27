@@ -61,10 +61,15 @@ public class AccountingLedgerApp
 
     }
 
+    // Displays ledger screen options.
     private static void displayLedgerOptions(ArrayList<Transaction> ledger)
     {
-        System.out.print("""
-                    \n----- Ledger Screen -----
+        String command = "";
+
+        while (!command.equalsIgnoreCase("H")) {
+            System.out.print("""
+                    \n
+                    ----- Ledger Screen -----
                     A) All - Display All Entries
                     D) Deposits - Display All Deposits Only
                     P) Payments - Display All Payments Only
@@ -72,46 +77,68 @@ public class AccountingLedgerApp
                     H) Home - Go back to home page
                     -------------------------
                     """
-        );
-        String command = promptForString("Enter one of the given command letters: ").toLowerCase();
-
-        switch (command)
-        {
-            case "a":
-                for (int i = 0; i < ledger.size(); i++) {
-                    Transaction t = ledger.get(i);
-                    t.displayTransaction();
-                }
-                break;
-            case "d":
-                for (int i = 0; i < ledger.size(); i++) {
-                    Transaction t = ledger.get(i);
-                    if (t.getPrice() > 0)
-                    {   t.displayTransaction();    }
-                }
-                break;
-            case "p":
-                for (int i = 0; i < ledger.size(); i++) {
-                    Transaction t = ledger.get(i);
-                    if (t.getPrice() < 0)
-                    {   t.displayTransaction();    }
-                }
-                break;
-            case "r":
-                reportsScreen(ledger);
-                break;
-            case "h":
-                System.out.println("Returning to Home Screen....");
-                break;
+            );
+            command = promptForString("Enter one of the given command letters: ").toLowerCase();
+            switch (command) {
+                case "a":
+                    displayAllTrans(ledger);
+                    break;
+                case "d":
+                    displayDeposits(ledger);
+                    break;
+                case "p":
+                    displayPayments(ledger);
+                    break;
+                case "r":
+                    reportsScreen(ledger);
+                    break;
+                case "h":
+                    System.out.println("Returning to Home Screen....");
+                    break;
+                default:
+                    System.out.println("Invalid command! Please choose from the given command letters: ");
+            }
         }
-
-
     }
 
+    // Displays all transactions through the Ledger Screen.
+    private static void displayAllTrans(ArrayList<Transaction> ledger)
+    {
+        for (int i = 0; i < ledger.size(); i++) {
+            Transaction t = ledger.get(i);
+            t.displayTransaction();
+        }
+    }
+
+    // Displays all deposits through the Ledger Screen.
+    private static void displayDeposits(ArrayList<Transaction> ledger)
+    {
+        for (int i = 0; i < ledger.size(); i++) {
+            Transaction t = ledger.get(i);
+            if (t.getPrice() > 0)
+            {   t.displayTransaction(); }
+        }
+    }
+
+    // Displays all payments through the Ledger Screen.
+    private static void displayPayments(ArrayList<Transaction> ledger)
+    {
+        for (int i = 0; i < ledger.size(); i++) {
+            Transaction t = ledger.get(i);
+            if (t.getPrice() < 0)
+            {   t.displayTransaction(); }
+        }
+    }
+
+    // Displays Report Screen and options.
     private static void reportsScreen(ArrayList<Transaction> ledger)
     {
-        System.out.print("""
-                    \n----- Report Options Screen -----
+        int command = -1;
+
+        while (command != 0) {
+            System.out.print("""
+                    \n
+                    ----- Report Options Screen -----
                     1) Month-To-Date Report
                     2) Previous Month Report
                     3) Year-To-Date Report
@@ -120,32 +147,35 @@ public class AccountingLedgerApp
                     0) Back - Go back to ledger screen
                     ---------------------------------
                     """
-        );
-        int command = promptForInt("Enter command #: ");
+            );
+            command = promptForInt("Enter command #: ");
 
-        switch (command)
-        {
-            case 1:
-                monthToDate(ledger);
-                break;
-            case 2:
-                previousMonth(ledger);
-                break;
-            case 3:
-                yearToDate(ledger);
-                break;
-            case 4:
-                previousYear(ledger);
-                break;
-            case 5:
-                searchByVendor(ledger);
-                break;
-            case 0:
-                System.out.println("Returning to Ledger Screen");
-                break;
+            switch (command) {
+                case 1:
+                    monthToDate(ledger);
+                    break;
+                case 2:
+                    previousMonth(ledger);
+                    break;
+                case 3:
+                    yearToDate(ledger);
+                    break;
+                case 4:
+                    previousYear(ledger);
+                    break;
+                case 5:
+                    searchByVendor(ledger);
+                    break;
+                case 0:
+                    System.out.println("Returning to Ledger Screen....");
+                    break;
+                default:
+                    System.out.println("Invalid command! Please choose from the given command numbers: ");
+            }
         }
     }
 
+    // Allows user to make a custom Ledger report based on specified vendor.
     private static void searchByVendor(ArrayList<Transaction> ledger)
     {
         String vendor = promptForString("Enter Vendor : ");
@@ -157,6 +187,7 @@ public class AccountingLedgerApp
         }
     }
 
+    // Displays Ledger report on Transactions made in the previous year.
     private static void previousYear(ArrayList<Transaction> ledger)
     {
         LocalDate today = LocalDate.now();
@@ -169,6 +200,7 @@ public class AccountingLedgerApp
         }
     }
 
+    // Displays Ledger report on Transactions made from Year-To-Date.
     private static void yearToDate(ArrayList<Transaction> ledger)
     {
         LocalDate today = LocalDate.now();
@@ -182,6 +214,7 @@ public class AccountingLedgerApp
         }
     }
 
+    // Displays Ledger report on Transactions made in the previous month.
     private static void previousMonth(ArrayList<Transaction> ledger)
     {
         LocalDate firstOfMonth = LocalDate.now().withDayOfMonth(1);
@@ -197,6 +230,7 @@ public class AccountingLedgerApp
 
     }
 
+    // Displays Ledger report on Transactions made from Month-To-Date.
     private static void monthToDate(ArrayList<Transaction> ledger)
     {
         LocalDate today = LocalDate.now();
@@ -210,6 +244,7 @@ public class AccountingLedgerApp
         }
     }
 
+    // Loads transaction data into the Ledger Log
     private static ArrayList<Transaction> getLedgerLog() throws IOException
     {
         ArrayList<Transaction> ledger = new ArrayList<Transaction>();
