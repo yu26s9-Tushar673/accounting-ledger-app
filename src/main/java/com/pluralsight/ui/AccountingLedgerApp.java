@@ -1,15 +1,13 @@
 package com.pluralsight.ui;
 
 import com.pluralsight.models.Transaction;
-
+import static com.pluralsight.ui.Console.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
-import static com.pluralsight.ui.Console.*;
 
 public class AccountingLedgerApp
 {
@@ -29,7 +27,6 @@ public class AccountingLedgerApp
                     """
             );
             String command = promptForString("Enter one of the given command letters: ").toLowerCase();
-
             switch (command)
             {
                 case "d":
@@ -53,8 +50,7 @@ public class AccountingLedgerApp
         String description = promptForString("Enter deposit Description: ");
         String vendor = promptForString("Enter deposit Vendor: ");
         float amount = promptForFloat("Enter deposit Amount: ");
-        if (amount <= 0)
-        {
+        if (amount <= 0) {
             while (amount <= 0)
             {   amount = promptForFloat("Deposit must be positive! Enter a positive value: ");  }
         }
@@ -64,6 +60,7 @@ public class AccountingLedgerApp
 
         BufferedWriter bufWriter = new BufferedWriter(new FileWriter("transactions.csv", true));
         bufWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
+        bufWriter.newLine();
         bufWriter.close();
 
         ledger.add(new Transaction(date, time, description, vendor, amount));
@@ -78,8 +75,7 @@ public class AccountingLedgerApp
         String description = promptForString("Enter payment Description: ");
         String vendor = promptForString("Enter payment Vendor: ");
         float amount = promptForFloat("Enter payment Amount: ");
-        if (amount >= 0)
-        {
+        if (amount >= 0) {
             while (amount >= 0)
             {   amount = promptForFloat("Payment must be negative! Enter a negative value: ");  }
         }
@@ -89,6 +85,7 @@ public class AccountingLedgerApp
 
         BufferedWriter bufWriter = new BufferedWriter(new FileWriter("transactions.csv", true));
         bufWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
+        bufWriter.newLine();
         bufWriter.close();
 
         ledger.add(new Transaction(date, time, description, vendor, amount));
@@ -101,7 +98,6 @@ public class AccountingLedgerApp
     private static void displayLedgerOptions(ArrayList<Transaction> ledger)
     {
         String command = "";
-
         while (!command.equalsIgnoreCase("H")) {
             System.out.print("""
                     \n
@@ -140,6 +136,7 @@ public class AccountingLedgerApp
     // Displays all transactions through the Ledger Screen.
     private static void displayAllTrans(ArrayList<Transaction> ledger)
     {
+        System.out.println("\n--------------- All Transactions ---------------");
         for (int i = 0; i < ledger.size(); i++) {
             Transaction t = ledger.get(i);
             t.displayTransaction();
@@ -149,6 +146,7 @@ public class AccountingLedgerApp
     // Displays all deposits through the Ledger Screen.
     private static void displayDeposits(ArrayList<Transaction> ledger)
     {
+        System.out.println("\n----------------- All Deposits -----------------");
         for (int i = 0; i < ledger.size(); i++) {
             Transaction t = ledger.get(i);
             if (t.getPrice() > 0)
@@ -159,6 +157,7 @@ public class AccountingLedgerApp
     // Displays all payments through the Ledger Screen.
     private static void displayPayments(ArrayList<Transaction> ledger)
     {
+        System.out.println("\n----------------- All Payments -----------------");
         for (int i = 0; i < ledger.size(); i++) {
             Transaction t = ledger.get(i);
             if (t.getPrice() < 0)
@@ -170,7 +169,6 @@ public class AccountingLedgerApp
     private static void reportsScreen(ArrayList<Transaction> ledger)
     {
         int command = -1;
-
         while (command != 0) {
             System.out.print("""
                     \n
@@ -185,7 +183,6 @@ public class AccountingLedgerApp
                     """
             );
             command = promptForInt("Enter command #: ");
-
             switch (command) {
                 case 1:
                     monthToDate(ledger);
@@ -211,11 +208,10 @@ public class AccountingLedgerApp
         }
     }
 
-    // Allows user to make a custom Ledger report based on specified vendor.
+    // Allows user to receive a custom Ledger report based on specified vendor search.
     private static void searchByVendor(ArrayList<Transaction> ledger)
     {
         String vendor = promptForString("Enter Vendor : ");
-
         for (int i = 0; i < ledger.size(); i++) {
             Transaction t = ledger.get(i);
             if (t.getVendor().toLowerCase().contains(vendor.toLowerCase()))
@@ -223,12 +219,12 @@ public class AccountingLedgerApp
         }
     }
 
-    // Displays Ledger report on Transactions made in the previous year.
+    // Displays a Ledger report on Transactions made in the previous year.
     private static void previousYear(ArrayList<Transaction> ledger)
     {
         LocalDate today = LocalDate.now();
         int prevYear = today.getYear() - 1;
-
+        System.out.println("\n---- Previous Year ----");
         for (int i = 0; i < ledger.size(); i++) {
             Transaction t = ledger.get(i);
             if (t.getDate().getYear() == prevYear)
@@ -236,13 +232,12 @@ public class AccountingLedgerApp
         }
     }
 
-    // Displays Ledger report on Transactions made from Year-To-Date.
+    // Displays a Ledger report on Transactions made from Year-To-Date.
     private static void yearToDate(ArrayList<Transaction> ledger)
     {
         LocalDate today = LocalDate.now();
         LocalDate ytdStart = today.withDayOfYear(1);
         System.out.println("\n----- Year-To-Date -----");
-
         for (int i = 0; i < ledger.size(); i++) {
             Transaction t = ledger.get(i);
             if (!t.getDate().isBefore(ytdStart) && !t.getDate().isAfter(today))
@@ -250,29 +245,26 @@ public class AccountingLedgerApp
         }
     }
 
-    // Displays Ledger report on Transactions made in the previous month.
+    // Displays a Ledger report on Transactions made in the previous month.
     private static void previousMonth(ArrayList<Transaction> ledger)
     {
         LocalDate firstOfMonth = LocalDate.now().withDayOfMonth(1);
         LocalDate prevMonthStart = firstOfMonth.minusMonths(1);
         LocalDate prevMonthEnd = firstOfMonth.minusDays(1);
         System.out.println("\n---- Previous Month ----");
-
         for (int i = 0; i < ledger.size(); i++) {
             Transaction t = ledger.get(i);
             if(!t.getDate().isBefore(prevMonthStart) && !t.getDate().isAfter(prevMonthEnd))
             {   t.displayTransaction(); }
         }
-
     }
 
-    // Displays Ledger report on Transactions made from Month-To-Date.
+    // Displays a Ledger report on Transactions made from Month-To-Date.
     private static void monthToDate(ArrayList<Transaction> ledger)
     {
         LocalDate today = LocalDate.now();
         LocalDate start = today.withDayOfMonth(1);
         System.out.println("\n----- Month-To-Date -----");
-
         for (int i = 0; i < ledger.size(); i++) {
             Transaction t = ledger.get(i);
             if(!t.getDate().isBefore(start) && !t.getDate().isAfter(today))
