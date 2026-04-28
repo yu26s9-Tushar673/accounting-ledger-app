@@ -11,18 +11,18 @@ import java.util.Comparator;
 
 public class AccountingLedgerApp
 {
-    // declare a class level static variable for ArrayList<Transaction> here , then ever method in this class has access to it.
+    // Declare a class level static variable for ArrayList<Transaction> here , then every method in this class has access to it.
     private static ArrayList<Transaction> ledgerLog;
 
     // Main method
-    static void main() throws IOException {
+    static void main() {
         ledgerLog  = getLedgerLog();
         Collections.sort(ledgerLog, Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
         mainMenu();
     }
 
     // Displays Main Screen Menu
-    private static void mainMenu() throws IOException {
+    private static void mainMenu() {
         do {
             System.out.print("""
                     \n
@@ -54,7 +54,7 @@ public class AccountingLedgerApp
     }
 
     // Add a deposit Transaction to the ledger log
-    private static void addDeposit() throws IOException {
+    private static void addDeposit() {
         String description = promptForString("Enter deposit Description: ");
         String vendor = promptForString("Enter deposit Vendor: ");
         float amount = promptForFloat("Enter deposit Amount: ");
@@ -66,18 +66,21 @@ public class AccountingLedgerApp
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now().withNano(0);
 
-        BufferedWriter bufWriter = new BufferedWriter(new FileWriter("transactions.csv", true));
-        bufWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
-        bufWriter.newLine();
-        bufWriter.close();
+        try (BufferedWriter bufWriter = new BufferedWriter(new FileWriter("transactions.csv", true))) {
+            bufWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
+            bufWriter.newLine();
+            bufWriter.close();
 
-        ledgerLog.add(new Transaction(date, time, description, vendor, amount));
-        Collections.sort(ledgerLog, Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
+            ledgerLog.add(new Transaction(date, time, description, vendor, amount));
+            Collections.sort(ledgerLog, Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
+        } catch (IOException e) {
+            System.out.println("---- Error! ----- Deposit not saved ----");
+        }
 
     }
 
     // Add a payment Transaction to the ledger log
-    private static void makePayment() throws IOException {
+    private static void makePayment() {
         String description = promptForString("Enter payment Description: ");
         String vendor = promptForString("Enter payment Vendor: ");
         float amount = promptForFloat("Enter payment Amount: ");
@@ -89,13 +92,18 @@ public class AccountingLedgerApp
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now().withNano(0);
 
-        BufferedWriter bufWriter = new BufferedWriter(new FileWriter("transactions.csv", true));
-        bufWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
-        bufWriter.newLine();
-        bufWriter.close();
+        try ( BufferedWriter bufWriter = new BufferedWriter(new FileWriter("transactions.csv", true))) {
+            bufWriter.write(date + "|" + time + "|" + description + "|" + vendor + "|" + amount);
+            bufWriter.newLine();
+            bufWriter.close();
 
-        ledgerLog.add(new Transaction(date, time, description, vendor, amount));
-        Collections.sort(ledgerLog, Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
+            ledgerLog.add(new Transaction(date, time, description, vendor, amount));
+            Collections.sort(ledgerLog, Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
+        } catch (IOException e) {
+            System.out.println("---- Error! ----- Payment not saved ----");
+        }
+
+
 
     }
 
@@ -278,18 +286,25 @@ public class AccountingLedgerApp
     }
 
     // Loads transaction data into the Ledger Log
-    private static ArrayList<Transaction> getLedgerLog() throws IOException {
+    private static ArrayList<Transaction> getLedgerLog() {
         ArrayList<Transaction> ledger = new ArrayList<Transaction>();
-        BufferedReader bufReader = new BufferedReader(new FileReader("transactions.csv"));
-        String input;
-        bufReader.readLine(); // Skips Header
-        while((input = bufReader.readLine()) != null)
-        {
-            String[] info = input.split("\\|");
-            Transaction oneTransaction = new Transaction(LocalDate.parse(info[0]), LocalTime.parse(info[1]), info[2],info[3], Float.parseFloat(info[4]));
-            ledger.add(oneTransaction);
+
+        try (BufferedReader bufReader = new BufferedReader(new FileReader("transactions.csv"))) {
+            String input;
+            bufReader.readLine(); // Skips Header
+            while((input = bufReader.readLine()) != null)
+            {
+                String[] info = input.split("\\|");
+                Transaction oneTransaction = new Transaction(LocalDate.parse(info[0]), LocalTime.parse(info[1]), info[2],info[3], Float.parseFloat(info[4]));
+                ledger.add(oneTransaction);
+            }
+        } catch (IOException e) {
+            System.out.println("""
+                    ----- Error -----
+                    File could not be found.
+                    Make sure the file exists and is closed.""");
         }
-        bufReader.close();
+
         return ledger;
     }
 }
