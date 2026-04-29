@@ -24,15 +24,16 @@ public class AccountingLedgerApp
     /** Displays Main Screen Menu */
     private static void mainMenu() {
         do {
-            System.out.print("""
+            System.out.printf("""
                     \n
                     ------ Home Screen ------
+                    Current Balance: $%.2f
                     D) Add Deposit
                     P) Make Payment (Debit)
                     L) Ledger - Ledger Display screen
                     X) Exit - exit the application
                     -------------------------
-                    """
+                    """, getBalance()
             );
             String command = promptForString("Enter one of the given command letters: ").toLowerCase();
             switch (command)
@@ -51,6 +52,14 @@ public class AccountingLedgerApp
                     return;
             }
         } while (true);
+    }
+
+    /** Returns Current Balance of Account */
+    private static float getBalance() {
+        float balance = 0;
+        for (int i = 0; i < ledgerLog.size(); i++)
+        {   balance += ledgerLog.get(i).getPrice(); }
+        return balance;
     }
 
     /** Add a deposit Transaction to the ledger log */
@@ -110,8 +119,7 @@ public class AccountingLedgerApp
     }
 
     /** Displays ledger Screen Menu. */
-    private static void ledgerMenu()
-    {
+    private static void ledgerMenu() {
         String command = "";
         while (!command.equalsIgnoreCase("H")) {
             System.out.print("""
@@ -149,40 +157,32 @@ public class AccountingLedgerApp
     }
 
     /** Displays all transactions through the Ledger Screen. */
-    private static void displayAllTrans()
-    {
+    private static void displayAllTrans() {
         System.out.println("\n--------------- All Transactions ---------------");
-        for (int i = 0; i < ledgerLog.size(); i++) {
-            Transaction t = ledgerLog.get(i);
-            System.out.println(t.formattedTransaction());
-        }
+        for (int i = 0; i < ledgerLog.size(); i++)
+        {   System.out.println(ledgerLog.get(i).formattedTransaction());    }
     }
 
     /** Displays all deposits through the Ledger Screen. */
-    private static void displayDeposits()
-    {
-        System.out.println("\n----------------- All Deposits -----------------");
+    private static void displayDeposits() {
+        System.out.println("\n----------------- All Deposits ------------------");
         for (int i = 0; i < ledgerLog.size(); i++) {
-            Transaction t = ledgerLog.get(i);
-            if (t.getPrice() > 0)
-            {   System.out.println(t.formattedTransaction()); }
+            if (ledgerLog.get(i).getPrice() > 0)
+            {   System.out.println(ledgerLog.get(i).formattedTransaction()); }
         }
     }
 
     /** Displays all payments through the Ledger Screen. */
-    private static void displayPayments()
-    {
-        System.out.println("\n----------------- All Payments -----------------");
+    private static void displayPayments() {
+        System.out.println("\n----------------- All Payments ------------------");
         for (int i = 0; i < ledgerLog.size(); i++) {
-            Transaction t = ledgerLog.get(i);
-            if (t.getPrice() < 0)
-            {   System.out.println(t.formattedTransaction()); }
+            if (ledgerLog.get(i).getPrice() < 0)
+            {   System.out.println(ledgerLog.get(i).formattedTransaction()); }
         }
     }
 
     /** Displays Report Screen Menu. */
-    private static void reportsMenu()
-    {
+    private static void reportsMenu() {
         int command = -1;
         while (command != 0) {
             System.out.print("""
@@ -258,74 +258,62 @@ public class AccountingLedgerApp
             System.out.println("One matching transaction found.....\n" + oneTransaction.formattedTransaction());
         } else {
             System.out.println(results.size() + " matching transactions found..... ");
-            for (int i = 0; i < results.size(); i++) {
-                Transaction searchTransaction = results.get(i);
-                System.out.println(searchTransaction.formattedTransaction());
-            }
+            for (int i = 0; i < results.size(); i++)
+            {   System.out.println(results.get(i).formattedTransaction());  }
         }
     }
 
     /** Allows user to receive a custom Ledger report based on specified vendor search. */
-    private static void searchByVendor()
-    {
+    private static void searchByVendor() {
         String vendor = promptForString("Enter Vendor : ");
         for (int i = 0; i < ledgerLog.size(); i++) {
-            Transaction t = ledgerLog.get(i);
-            if (t.getVendor().toLowerCase().contains(vendor.toLowerCase()))
-            {   System.out.println(t.formattedTransaction());   }
+            if (ledgerLog.get(i).getVendor().toLowerCase().contains(vendor.toLowerCase()))
+            {   System.out.println(ledgerLog.get(i).formattedTransaction());   }
         }
     }
 
     /** Displays a Ledger report on Transactions made in the previous year. */
-    private static void previousYear()
-    {
+    private static void previousYear() {
         LocalDate today = LocalDate.now();
         int prevYear = today.getYear() - 1;
         System.out.println("\n---- Previous Year ----");
         for (int i = 0; i < ledgerLog.size(); i++) {
-            Transaction t = ledgerLog.get(i);
-            if (t.getDate().getYear() == prevYear)
-            {   System.out.println(t.formattedTransaction()); }
+            if (ledgerLog.get(i).getDate().getYear() == prevYear)
+            {   System.out.println(ledgerLog.get(i).formattedTransaction()); }
         }
     }
 
     /** Displays a Ledger report on Transactions made from Year-To-Date. */
-    private static void yearToDate()
-    {
+    private static void yearToDate() {
         LocalDate today = LocalDate.now();
         LocalDate ytdStart = today.withDayOfYear(1);
         System.out.println("\n----- Year-To-Date -----");
         for (int i = 0; i < ledgerLog.size(); i++) {
-            Transaction t = ledgerLog.get(i);
-            if (!t.getDate().isBefore(ytdStart) && !t.getDate().isAfter(today))
-            {   System.out.println(t.formattedTransaction()); }
+            if (!ledgerLog.get(i).getDate().isBefore(ytdStart) && !ledgerLog.get(i).getDate().isAfter(today))
+            {   System.out.println(ledgerLog.get(i).formattedTransaction()); }
         }
     }
 
     /** Displays a Ledger report on Transactions made in the previous month. */
-    private static void previousMonth()
-    {
+    private static void previousMonth() {
         LocalDate firstOfMonth = LocalDate.now().withDayOfMonth(1);
         LocalDate prevMonthStart = firstOfMonth.minusMonths(1);
         LocalDate prevMonthEnd = firstOfMonth.minusDays(1);
         System.out.println("\n---- Previous Month ----");
         for (int i = 0; i < ledgerLog.size(); i++) {
-            Transaction t = ledgerLog.get(i);
-            if(!t.getDate().isBefore(prevMonthStart) && !t.getDate().isAfter(prevMonthEnd))
-            {   System.out.println(t.formattedTransaction()); }
+            if(!ledgerLog.get(i).getDate().isBefore(prevMonthStart) && !ledgerLog.get(i).getDate().isAfter(prevMonthEnd))
+            {   System.out.println(ledgerLog.get(i).formattedTransaction()); }
         }
     }
 
     /** Displays a Ledger report on Transactions made from Month-To-Date. */
-    private static void monthToDate()
-    {
+    private static void monthToDate() {
         LocalDate today = LocalDate.now();
         LocalDate start = today.withDayOfMonth(1);
         System.out.println("\n----- Month-To-Date -----");
         for (int i = 0; i < ledgerLog.size(); i++) {
-            Transaction t = ledgerLog.get(i);
-            if(!t.getDate().isBefore(start) && !t.getDate().isAfter(today))
-            {   System.out.println(t.formattedTransaction()); }
+            if(!ledgerLog.get(i).getDate().isBefore(start) && !ledgerLog.get(i).getDate().isAfter(today))
+            {   System.out.println(ledgerLog.get(i).formattedTransaction()); }
         }
     }
 
