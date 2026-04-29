@@ -11,7 +11,7 @@ public class Transaction
     private String vendor;
     private float price;
 
-    // Constructor method of a Transaction Object
+    /** Constructor method of a Transaction Object */
     public Transaction(LocalDate date, LocalTime time, String description, String vendor, float price) {
         this.date = date;
         this.time = time;
@@ -20,28 +20,30 @@ public class Transaction
         this.price = price;
     }
 
-    // Displays a Transaction Object
-    public void displayTransaction()
-    {
-        System.out.printf("\nDate: %s | Time: %s | %s | %s | Amount: $%.2f",
+    /** Displays a Transaction Object */
+    public String formattedTransaction(){
+        return String.format("\nDate: %s | Time: %s | %s | %s | Amount: $%.2f",
                 this.getDate(), this.getTime(), this.getDescription(), this.getVendor(), this.getPrice());
     }
 
-    // Getter and Setter methods
+    /** Getter and Setter methods */
     public LocalDate getDate()
     {   return date;    }
 
-    public LocalTime getTime() {
-        return time;
-    }
+    public void setDate(LocalDate date)
+    {   this.date = date;   }
 
-    public String getDescription() {
-        return description;
-    }
+    public LocalTime getTime()
+    {   return time;    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public void setTime(LocalTime time)
+    {   this.time = time;   }
+
+    public String getDescription()
+    {   return description; }
+
+    public void setDescription(String description)
+    {   this.description = description; }
 
     public String getVendor()
     {   return vendor;  }

@@ -11,17 +11,17 @@ import java.util.Comparator;
 
 public class AccountingLedgerApp
 {
-    // Declare a class level static variable for ArrayList<Transaction> here, then every method in this class has access to it.
+    /** Declare a class level static variable for ArrayList<Transaction> here, then every method in this class has access to it */
     private static ArrayList<Transaction> ledgerLog;
 
-    // Main method
+    /** Main method */
     static void main() {
         ledgerLog  = getLedgerLog();
         Collections.sort(ledgerLog, Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
         mainMenu();
     }
 
-    // Displays Main Screen Menu
+    /** Displays Main Screen Menu */
     private static void mainMenu() {
         do {
             System.out.print("""
@@ -53,7 +53,7 @@ public class AccountingLedgerApp
         } while (true);
     }
 
-    // Add a deposit Transaction to the ledger log
+    /** Add a deposit Transaction to the ledger log */
     private static void addDeposit() {
 
 
@@ -81,7 +81,7 @@ public class AccountingLedgerApp
 
     }
 
-    // Add a payment Transaction to the ledger log
+    /** Add a payment Transaction to the ledger log */
     private static void makePayment() {
         String description = promptForString("Enter payment Description: ");
         String vendor = promptForString("Enter payment Vendor: ");
@@ -109,7 +109,7 @@ public class AccountingLedgerApp
 
     }
 
-    // Displays ledger Screen Menu.
+    /** Displays ledger Screen Menu. */
     private static void ledgerMenu()
     {
         String command = "";
@@ -148,39 +148,39 @@ public class AccountingLedgerApp
         }
     }
 
-    // Displays all transactions through the Ledger Screen.
+    /** Displays all transactions through the Ledger Screen. */
     private static void displayAllTrans()
     {
         System.out.println("\n--------------- All Transactions ---------------");
         for (int i = 0; i < ledgerLog.size(); i++) {
             Transaction t = ledgerLog.get(i);
-            t.displayTransaction();
+            System.out.println(t.formattedTransaction());
         }
     }
 
-    // Displays all deposits through the Ledger Screen.
+    /** Displays all deposits through the Ledger Screen. */
     private static void displayDeposits()
     {
         System.out.println("\n----------------- All Deposits -----------------");
         for (int i = 0; i < ledgerLog.size(); i++) {
             Transaction t = ledgerLog.get(i);
             if (t.getPrice() > 0)
-            {   t.displayTransaction(); }
+            {   System.out.println(t.formattedTransaction()); }
         }
     }
 
-    // Displays all payments through the Ledger Screen.
+    /** Displays all payments through the Ledger Screen. */
     private static void displayPayments()
     {
         System.out.println("\n----------------- All Payments -----------------");
         for (int i = 0; i < ledgerLog.size(); i++) {
             Transaction t = ledgerLog.get(i);
             if (t.getPrice() < 0)
-            {   t.displayTransaction(); }
+            {   System.out.println(t.formattedTransaction()); }
         }
     }
 
-    // Displays Report Screen Menu.
+    /** Displays Report Screen Menu. */
     private static void reportsMenu()
     {
         int command = -1;
@@ -227,7 +227,7 @@ public class AccountingLedgerApp
         }
     }
 
-    // Allows user to get a custom Ledger Report based on chosen fields
+    /** Allows user to get a custom Ledger Report based on chosen fields */
     private static void customSearch() {
         System.out.println("Enter a value to filter by that field, or press Enter to skip:");
         LocalDate startDate = promptForDate("Start Date (yyyy-MM-dd): ");
@@ -259,27 +259,30 @@ public class AccountingLedgerApp
         System.out.println("Search Filter Results:");
         if (results.isEmpty()) {
             System.out.println("No transactions found matching your search filters.");
+        } else if (results.size() == 1) {
+            Transaction oneTransaction = results.getFirst();
+            System.out.println("One matching transaction found.....\n" + oneTransaction.formattedTransaction());
         } else {
             System.out.println(results.size() + " matching transactions found..... ");
             for (int i = 0; i < results.size(); i++) {
                 Transaction searchTransaction = results.get(i);
-                searchTransaction.displayTransaction();
+                System.out.println(searchTransaction.formattedTransaction());
             }
         }
     }
 
-    // Allows user to receive a custom Ledger report based on specified vendor search.
+    /** Allows user to receive a custom Ledger report based on specified vendor search. */
     private static void searchByVendor()
     {
         String vendor = promptForString("Enter Vendor : ");
         for (int i = 0; i < ledgerLog.size(); i++) {
             Transaction t = ledgerLog.get(i);
             if (t.getVendor().toLowerCase().contains(vendor.toLowerCase()))
-            {   t.displayTransaction(); }
+            {   System.out.println(t.formattedTransaction());   }
         }
     }
 
-    // Displays a Ledger report on Transactions made in the previous year.
+    /** Displays a Ledger report on Transactions made in the previous year. */
     private static void previousYear()
     {
         LocalDate today = LocalDate.now();
@@ -288,11 +291,11 @@ public class AccountingLedgerApp
         for (int i = 0; i < ledgerLog.size(); i++) {
             Transaction t = ledgerLog.get(i);
             if (t.getDate().getYear() == prevYear)
-            {   t.displayTransaction(); }
+            {   System.out.println(t.formattedTransaction()); }
         }
     }
 
-    // Displays a Ledger report on Transactions made from Year-To-Date.
+    /** Displays a Ledger report on Transactions made from Year-To-Date. */
     private static void yearToDate()
     {
         LocalDate today = LocalDate.now();
@@ -301,11 +304,11 @@ public class AccountingLedgerApp
         for (int i = 0; i < ledgerLog.size(); i++) {
             Transaction t = ledgerLog.get(i);
             if (!t.getDate().isBefore(ytdStart) && !t.getDate().isAfter(today))
-            {   t.displayTransaction(); }
+            {   System.out.println(t.formattedTransaction()); }
         }
     }
 
-    // Displays a Ledger report on Transactions made in the previous month.
+    /** Displays a Ledger report on Transactions made in the previous month. */
     private static void previousMonth()
     {
         LocalDate firstOfMonth = LocalDate.now().withDayOfMonth(1);
@@ -315,11 +318,11 @@ public class AccountingLedgerApp
         for (int i = 0; i < ledgerLog.size(); i++) {
             Transaction t = ledgerLog.get(i);
             if(!t.getDate().isBefore(prevMonthStart) && !t.getDate().isAfter(prevMonthEnd))
-            {   t.displayTransaction(); }
+            {   System.out.println(t.formattedTransaction()); }
         }
     }
 
-    // Displays a Ledger report on Transactions made from Month-To-Date.
+    /** Displays a Ledger report on Transactions made from Month-To-Date. */
     private static void monthToDate()
     {
         LocalDate today = LocalDate.now();
@@ -328,11 +331,11 @@ public class AccountingLedgerApp
         for (int i = 0; i < ledgerLog.size(); i++) {
             Transaction t = ledgerLog.get(i);
             if(!t.getDate().isBefore(start) && !t.getDate().isAfter(today))
-            {   t.displayTransaction(); }
+            {   System.out.println(t.formattedTransaction()); }
         }
     }
 
-    // Loads transaction data into the Ledger Log
+    /** Loads transaction data into the Ledger Log */
     private static ArrayList<Transaction> getLedgerLog() {
         ArrayList<Transaction> ledger = new ArrayList<Transaction>();
 
