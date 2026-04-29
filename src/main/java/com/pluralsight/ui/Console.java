@@ -124,7 +124,7 @@ public class Console
      * @param prompt to display the user
      * @return the float the user selected.
      */
-    public static Float promptForFloatObject(String prompt) {
+    public static Float promptNullableFloat(String prompt) {
 
         System.out.print(prompt);
 

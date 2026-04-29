@@ -234,25 +234,19 @@ public class AccountingLedgerApp
         LocalDate endDate = promptForDate("End Date (yyyy-MM-dd): ");
         String description = promptForString("Description: ");
         String vendor = promptForString("Vendor: ");
-        Float min = promptForFloatObject("Enter minimum amount value: ");
-        Float max = promptForFloatObject("Enter maximum amount value: ");
+        Float min = promptNullableFloat("Enter minimum amount value: ");
+        Float max = promptNullableFloat("Enter maximum amount value: ");
 
         ArrayList<Transaction> results = new ArrayList<>();
         for (int i = 0; i < ledgerLog.size(); i++) {
             Transaction t = ledgerLog.get(i);
 
-            if (startDate != null && t.getDate().isBefore(startDate))
-            { continue; }
-            if (endDate != null && t.getDate().isAfter(endDate))
-            { continue; }
-            if (!description.isEmpty() && !t.getDescription().toLowerCase().contains(description.toLowerCase()))
-            { continue; }
-            if (!vendor.isEmpty() && !t.getVendor().toLowerCase().contains(vendor.toLowerCase()))
-            { continue; }
-            if (min != null && t.getPrice() < min)
-            { continue; }
-            if (max != null && t.getPrice() >  max)
-            { continue; }
+            if (startDate != null && t.getDate().isBefore(startDate)) { continue; }
+            if (endDate != null && t.getDate().isAfter(endDate)) { continue; }
+            if (!description.isEmpty() && !t.getDescription().toLowerCase().contains(description.toLowerCase())) { continue; }
+            if (!vendor.isEmpty() && !t.getVendor().toLowerCase().contains(vendor.toLowerCase())) { continue; }
+            if (min != null && t.getPrice() < min) { continue; }
+            if (max != null && t.getPrice() >  max) { continue; }
 
             results.add(t);
         }
