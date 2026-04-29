@@ -11,7 +11,7 @@ import java.util.Comparator;
 
 public class AccountingLedgerApp
 {
-    // Declare a class level static variable for ArrayList<Transaction> here , then every method in this class has access to it.
+    // Declare a class level static variable for ArrayList<Transaction> here, then every method in this class has access to it.
     private static ArrayList<Transaction> ledgerLog;
 
     // Main method
@@ -55,6 +55,8 @@ public class AccountingLedgerApp
 
     // Add a deposit Transaction to the ledger log
     private static void addDeposit() {
+
+
         String description = promptForString("Enter deposit Description: ");
         String vendor = promptForString("Enter deposit Vendor: ");
         float amount = promptForFloat("Enter deposit Amount: ");
@@ -191,6 +193,7 @@ public class AccountingLedgerApp
                     3) Year-To-Date Report
                     4) Previous Year Report
                     5) Search By Vendor
+                    6) Custom Search Report
                     0) Back - Go back to ledger screen
                     ---------------------------------
                     """
@@ -212,11 +215,55 @@ public class AccountingLedgerApp
                 case 5:
                     searchByVendor();
                     break;
+                case 6:
+                    customSearch();
+                    break;
                 case 0:
                     System.out.println("Returning to Ledger Screen....");
                     break;
                 default:
                     System.out.println("Invalid command! Please choose from the given command numbers: ");
+            }
+        }
+    }
+
+    // Allows user to get a custom Ledger Report based on chosen fields
+    private static void customSearch() {
+        System.out.println("Enter a value to filter by that field, or press Enter to skip:");
+        LocalDate startDate = promptForDate("Start Date (yyyy-MM-dd): ");
+        LocalDate endDate = promptForDate("End Date (yyyy-MM-dd): ");
+        String description = promptForString("Description: ");
+        String vendor = promptForString("Vendor: ");
+        Float min = promptForFloatObject("Enter minimum amount value: ");
+        Float max = promptForFloatObject("Enter maximum amount value: ");
+
+        ArrayList<Transaction> results = new ArrayList<>();
+        for (int i = 0; i < ledgerLog.size(); i++) {
+            Transaction t = ledgerLog.get(i);
+
+            if (startDate != null && t.getDate().isBefore(startDate))
+            { continue; }
+            if (endDate != null && t.getDate().isAfter(endDate))
+            { continue; }
+            if (!description.isEmpty() && !t.getDescription().toLowerCase().contains(description.toLowerCase()))
+            { continue; }
+            if (!vendor.isEmpty() && !t.getVendor().toLowerCase().contains(vendor.toLowerCase()))
+            { continue; }
+            if (min != null && t.getPrice() < min)
+            { continue; }
+            if (max != null && t.getPrice() >  max)
+            { continue; }
+
+            results.add(t);
+        }
+        System.out.println("Search Filter Results:");
+        if (results.isEmpty()) {
+            System.out.println("No transactions found matching your search filters.");
+        } else {
+            System.out.println(results.size() + " matching transactions found..... ");
+            for (int i = 0; i < results.size(); i++) {
+                Transaction searchTransaction = results.get(i);
+                searchTransaction.displayTransaction();
             }
         }
     }

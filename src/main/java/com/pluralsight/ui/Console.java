@@ -1,5 +1,8 @@
 package com.pluralsight.ui;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -7,21 +10,21 @@ public class Console
 {
     private static final Scanner scanner = new Scanner(System.in);
 
-
-    /**
-     * Prompts the user for a double.
-     * @param prompt to display the user
-     * @return the double the user selected.
-     */
-    public static double promptForDouble(String prompt) {
-
+    public static LocalDate promptForDate(String prompt) {
         System.out.print(prompt);
-        double result =  scanner.nextDouble();
-        scanner.nextLine();
-        return result;
+        while (true) {
+            try {
+                String input = scanner.nextLine().trim();
 
+                if (input.isEmpty())
+                {   return null;    }
+
+                return LocalDate.parse(input, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            } catch (DateTimeParseException e) {
+                System.out.print("Invalid date format, please enter a date with format (yyyy-MM-dd): ");
+            }
+        }
     }
-
 
     /**
      * Prompts the user for a string.
@@ -30,7 +33,41 @@ public class Console
      */
     public static String promptForString(String prompt) {
         System.out.print(prompt);
-        return scanner.nextLine();
+        while (true)
+        {
+            try {
+                String input = scanner.nextLine().trim();
+                if (input.isEmpty())
+                {   return "";    }
+                return input;
+            } catch (Exception e) {
+                System.out.println("Error! Please try again.");
+            }
+        }
+    }
+
+    /**
+     * Prompts the user for an integer.
+     * @param prompt to display the user
+     * @return the int the user selected.
+     */
+    public static double promptForDouble(String prompt) {
+
+        System.out.print(prompt);
+
+        double result;
+
+        while(true){
+            try{
+                result =  scanner.nextDouble();
+                scanner.nextLine();
+                return result;
+            }
+            catch (InputMismatchException e){
+                System.out.print("Invalid selection, please enter a number: ");
+            }
+            scanner.nextLine(); // Buffer handling
+        }
     }
 
 
@@ -83,6 +120,30 @@ public class Console
     }
 
     /**
+     * Prompts the user for a float integer.
+     * @param prompt to display the user
+     * @return the float the user selected.
+     */
+    public static Float promptForFloatObject(String prompt) {
+
+        System.out.print(prompt);
+
+        while(true){
+            try{
+                String input =  scanner.nextLine().trim();
+
+                if(input.isEmpty())
+                { return null;}
+
+                return Float.parseFloat(input);
+            }
+            catch (InputMismatchException e){
+                System.out.print("Invalid selection, please enter a number: ");
+            }
+        }
+    }
+
+    /**
      * Prompts the user for an integer.
      * @param prompt to display the user
      * @return the int the user selected.
@@ -119,9 +180,14 @@ public class Console
      * @return the boolean
      */
     public static boolean promptForYesNo(String prompt) {
-        System.out.print(prompt);
-        String userInput = scanner.nextLine();
-        return userInput.equalsIgnoreCase("YES");
-        //opportunity to enhance this with some error protection.
+        System.out.print(prompt + "(yes/no): ");
+        String userInput = scanner.nextLine().trim();
+        while (true) {
+            if (userInput.equalsIgnoreCase("yes") || userInput.equalsIgnoreCase("y"))
+            {   return true;    }
+            else if (userInput.equalsIgnoreCase("no") || userInput.equalsIgnoreCase("n"))
+            {   return false;   }
+            System.out.println("Invalid Input! Please enter yes or no.");
+        }
     }
 }
