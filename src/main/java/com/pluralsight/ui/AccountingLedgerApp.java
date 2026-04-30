@@ -18,6 +18,7 @@ public class AccountingLedgerApp
     static void main() {
         ledgerLog  = getLedgerLog();
         Collections.sort(ledgerLog, Comparator.comparing(Transaction::getDate).thenComparing(Transaction::getTime).reversed());
+        System.out.println("------------ Financial Tracker ------------");
         mainMenu();
     }
 
@@ -66,8 +67,6 @@ public class AccountingLedgerApp
 
     /** Add a deposit Transaction to the ledger log */
     private static void addDeposit() {
-
-
         String description = promptForString("Enter deposit Description: ");
         String vendor = promptForString("Enter deposit Vendor: ");
         float amount = promptForFloat("Enter deposit Amount: ");
@@ -89,7 +88,6 @@ public class AccountingLedgerApp
         } catch (IOException e) {
             System.out.println("---- Error! ----- Deposit not saved ----");
         }
-
     }
 
     /** Add a payment Transaction to the ledger log */
@@ -115,9 +113,6 @@ public class AccountingLedgerApp
         } catch (IOException e) {
             System.out.println("---- Error! ----- Payment not saved ----");
         }
-
-
-
     }
 
     /** Displays ledger Screen Menu. */
