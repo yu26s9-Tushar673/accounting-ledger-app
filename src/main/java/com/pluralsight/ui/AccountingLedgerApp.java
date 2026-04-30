@@ -50,6 +50,8 @@ public class AccountingLedgerApp
                 case "x":
                     System.out.println("Thank you, Goodbye!");
                     return;
+                default:
+                    System.out.print("Invalid command! Please choose from the given command letters: ");
             }
         } while (true);
     }
@@ -151,7 +153,7 @@ public class AccountingLedgerApp
                     System.out.println("Returning to Home Screen....");
                     break;
                 default:
-                    System.out.println("Invalid command! Please choose from the given command letters: ");
+                    System.out.print("Invalid command! Please choose from the given command letters: ");
             }
         }
     }
@@ -240,14 +242,12 @@ public class AccountingLedgerApp
         ArrayList<Transaction> results = new ArrayList<>();
         for (int i = 0; i < ledgerLog.size(); i++) {
             Transaction t = ledgerLog.get(i);
-
             if (startDate != null && t.getDate().isBefore(startDate)) { continue; }
             if (endDate != null && t.getDate().isAfter(endDate)) { continue; }
             if (!description.isEmpty() && !t.getDescription().toLowerCase().contains(description.toLowerCase())) { continue; }
             if (!vendor.isEmpty() && !t.getVendor().toLowerCase().contains(vendor.toLowerCase())) { continue; }
             if (min != null && t.getPrice() < min) { continue; }
             if (max != null && t.getPrice() >  max) { continue; }
-
             results.add(t);
         }
         System.out.println("Search Filter Results:");
@@ -336,7 +336,6 @@ public class AccountingLedgerApp
                     File could not be found.
                     Make sure the file exists and is closed.""");
         }
-
         return ledger;
     }
 }
