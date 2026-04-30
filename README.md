@@ -52,5 +52,5 @@ A Java Command-Line Interface Application that allows users to track their finan
 
 ## Future Improvements
  - Add a 'Account' feature.
-    - When the program starts, prompt user to enter username and password, use the input to either create a new file to write/read from or and open existing file which represents individualized accounts.
+    - When the program starts, prompt user to enter username and password, use the input to either create a new file to write/read from or open existing file if the input matches, which represents individualized accounts.
  - Add a GUI
